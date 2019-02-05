@@ -15,7 +15,8 @@
     <plugin name="cordova-plugin-inappbrowser" spec="~1.7.1" />
     <plugin name="phonegap-plugin-barcodescanner"/>
     <plugin name="cordova-plugin-whitelist"/>
-        
+    <plugin name="cordova-plugin-camera"/>  
+	
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
