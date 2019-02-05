@@ -16,7 +16,6 @@
     <plugin name="phonegap-plugin-barcodescanner"/>
     <plugin name="cordova-plugin-whitelist"/>
     <plugin name="cordova-plugin-camera"/>  
-	<plugin name="https://github.com/apache/cordova-plugin-file-transfer"/> 
 
     <access origin="*" />
     <allow-intent href="http://*/*" />
