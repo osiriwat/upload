@@ -15,7 +15,9 @@
       myImg.style.display = 'block';
       myImg.src = imageURI;
    }
-
+   function onFail(message) {                                                                  
+          alert('Failed because: ' + message);                                                    
+   }  
    function getPhoto(source) {
       navigator.camera.getPicture(onSuccess, onFail, {quality: 50,
       destinationType: destinationType.FILE_URI,
