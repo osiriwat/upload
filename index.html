@@ -1,65 +1,101 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-
-<head>
-    <title>File Transfer Example</title>
+  <head>
+    <title>Submit form</title>
 
     <script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
     <script type="text/javascript" charset="utf-8">
-        // Wait for Cordova to load
-        //
-        document.addEventListener("deviceready", onDeviceReady, false);
 
-        // Cordova is ready
-        //
-        function onDeviceReady() {
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value
 
-            // Retrieve image file location from specified source
-            navigator.camera.getPicture(uploadPhoto,
-                function (message) {
-                    alert('get picture failed');
-                }, {
-                    quality: 50,
-                    destinationType: navigator.camera.DestinationType.FILE_URI,
-                    sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
-                }
-            );
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
 
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        pictureSource = navigator.camera.PictureSourceType;
+        destinationType = navigator.camera.DestinationType;
+    }
+
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+
+        // Show the selected image
+        var smallImage = document.getElementById('smallImage');
+        smallImage.style.display = 'block';
+        smallImage.src = imageURI;
+    }
+
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });
+    }
+
+    function uploadPhoto() {
+
+        //selected photo URI is in the src attribute (we set this on getPhoto)
+        var imageURI = document.getElementById('smallImage').getAttribute("src");
+        if (!imageURI) {
+            alert('Please select an image first.');
+            return;
         }
 
-        function uploadPhoto(imageURI) {
-            var options = new FileUploadOptions();
-            options.fileKey = "file";
-            options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
-            options.mimeType = "image/jpeg";
+        //set upload options
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = imageURI.substr(imageURI.lastIndexOf('/')+1);
+        options.mimeType = "image/jpeg";
 
-            var params = new Object();
-            params.value1 = "test";
-            params.value2 = "param";
-
-            options.params = params;
-
-            var ft = new FileTransfer();
-            ft.upload(imageURI, encodeURI("http://some.server.com/upload.php"), win, fail, options);
+        options.params = {
+            firstname: document.getElementById("firstname").value,
+            lastname: document.getElementById("lastname").value,
+            workplace: document.getElementById("workplace").value
         }
 
-        function win(r) {
-            console.log("Code = " + r.responseCode);
-            console.log("Response = " + r.response);
-            console.log("Sent = " + r.bytesSent);
-        }
+        var ft = new FileTransfer();
+        ft.upload(imageURI, encodeURI("http://some.server.com/upload.php"), win, fail, options);
+    }
 
-        function fail(error) {
-            alert("An error has occurred: Code = " + error.code);
-            console.log("upload error source " + error.source);
-            console.log("upload error target " + error.target);
-        }
+    // Called if something bad happens.
+    //
+    function onFail(message) {
+      console.log('Failed because: ' + message);
+    }
+
+    function win(r) {
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        //alert("Response =" + r.response);
+        console.log("Sent = " + r.bytesSent);
+    }
+
+    function fail(error) {
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        console.log("upload error target " + error.target);
+    }
+
     </script>
-</head>
+  </head>
+  <body>
+    <form id="regform">
+        <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Select Photo:</button><br>
+        <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
 
-<body>
-    <h1>Example</h1>
-    <p>Upload File</p>
-</body>
-
+        First Name: <input type="text" id="firstname" name="firstname"><br>
+        Last Name: <input type="text" id="lastname" name="lastname"><br>
+        Work Place: <input type="text" id="workplace" name="workPlace"><br>
+        <input type="button" id="btnSubmit" value="Submit" onclick="uploadPhoto();">
+    </form>
+  </body>
 </html>
