@@ -19,7 +19,7 @@
     <plugin name="cordova-plugin-device" />
     <plugin name="cordova-plugin-file" />
     <plugin name="cordova-plugin-network-information" />
-    <plugin name="cordova-plugin-camera" />
+    <plugin name="cordova-plugin-camera" spec="~4.0.3"/>
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <!--
         Enable individual API permissions here.
